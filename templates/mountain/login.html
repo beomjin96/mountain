@@ -4,17 +4,36 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>로그인</title>
+
     <!-- Import Bulma CSS CDN -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma-rtl.min.css">
+    <link rel="stylesheet" href="/static/css/bulma.css" />
+
     <!-- Import Font-Awesome CDN -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/font-awesome.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+        * {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        html, body, .section {
+            height: 100%;
+        }
+        body {
+            background: url("/static/images/background-mountains7.jpg") no-repeat;
+            background-size: cover;
+        }
+
+        nav {
+            margin-bottom: 100px;
+        }
+    </style>
 </head>
 <body>
 <section class="section">
-    <div class="container is-half">
-        <div class="columns is-justify-content-center">
-            <div class="column is-half">
+        <div class="container" style="height: 100%">
+        <div class="columns is-justify-content-center" style="height: 100%">
+            <div class="column is-two-fifths" style="height: 100%">
                 <div class="card">
                     <header class="card-header">
                         <div class="card-header-title has-background-primary has-background-light has-text-white">로그인
@@ -23,29 +42,34 @@
                     <div class="card-content">
                         <div class="content">
                             <div class="field">
-                                <p class="control has-icons-left has-icons-right">
+                                <p class="control is-expanded has-icons-left has-icons-right">
                                     <input class="input" type="email" placeholder="Email">
                                     <span class="icon is-small is-left">
                                         <i class="fa fa-envelope"></i>
                                     </span>
                                     <span class="icon is-small is-right">
-                                        <i class="fa fa-check"></i>
+                                        <i class="fa fa-exclamation-triangle"></i>
                                     </span>
                                 </p>
+                                <p class="help is-danger">This email is invalid</p>
                             </div>
                             <div class="field">
-                                <p class="control has-icons-left">
+                                <p class="control has-icons-left has-icons-right">
                                     <input class="input" type="password" placeholder="Password">
                                     <span class="icon is-small is-left">
                                         <i class="fa fa-lock"></i>
                                     </span>
+                                    <span class="icon is-small is-right">
+                                        <i class="fa fa-check"></i>
+                                    </span>
                                 </p>
+                                <p class="help is-success">This password is available</p>
                             </div>
                         </div>
                     </div>
                     <footer class="card-footer">
-                        <a href="#" class="card-footer-item icon is-small is-left">로그인</a>
-                        <a href="#" class="card-footer-item">회원가입</a>
+                        <a href="#" class="card-footer-item has-text-primary-dark">로그인</a>
+                        <a href="#" class="card-footer-item has-text-primary-dark">회원가입</a>
                     </footer>
                 </div>
             </div>
