@@ -8,7 +8,7 @@ import datetime
 import hashlib
 
 client = MongoClient('mongodb+srv://test:sparta@cluster0.ojjgb.mongodb.net/Cluster0?retryWrites=true&w=majority')
-db = client.dbsparta
+db = client.mountain
 app = Flask(__name__)
 
 # JWT Encode/Decode Key
@@ -24,10 +24,10 @@ def home():
         return render_template('index.html', nickname=user['nickname'])
 
     except jwt.ExpiredSignatureError:
-        return redirect(url_for('mountain/login', message='로그인 시간이 만료되었습니다.'))
+        return redirect(url_for('/mountain/login', message='로그인 시간이 만료되었습니다.'))
 
     except jwt.exceptions.DecodeError:
-        return redirect(url_for('mountain/login', message='로그인 정보가 존재하지 않습니다.'))
+        return redirect(url_for('/mountain/login', message='로그인 정보가 존재하지 않습니다.'))
 
 
 @app.route('/mountain/login')
@@ -38,7 +38,7 @@ def login():
 # [로그인 API]
 @app.route('/mountain/login', methods=['POST'])
 def api_login():
-    email_receive = request.form['id_give']
+    email_receive = request.form['email_give']
     password_receive = request.form['password_give']
 
     # PASSWORD SHA256으로 암호화
@@ -46,18 +46,19 @@ def api_login():
 
     # 암호화 된 PASSWORD 로 DB 에서 유저 검색
     user = db.users.find_one({'email': email_receive, 'password': password_hash})
-    print(f'user = {user}')
 
     if user is None:
         return jsonify({'result': 'fail', 'message': '아이디/비밀번호가 일치하지 않습니다.'})
 
     # 의문점) 이미 JWT 토큰이 있어도 다시 발급을 해줘야 하나?
+    # -- 토큰이 이미 있다면 이 곳으로 올 일이 없어서 상관 없다.
+
     # 토큰 발급
     payload = {
         'email': email_receive,
         'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=3600)
     }
-    token = jwt.encode(payload, SECRET_KEY, algorithm='HS256').decode('UTF-8')
+    token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
     return jsonify({'result': 'success', 'token': token})
 
 
