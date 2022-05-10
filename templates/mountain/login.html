@@ -11,6 +11,11 @@
     <!-- Import Font-Awesome CDN -->
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
 
+    <!-- Import JQuery -->
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
         * {
@@ -28,12 +33,32 @@
             margin-bottom: 100px;
         }
     </style>
+
+    <script>
+        function login() {
+            //const data = { email_give: $("#email").val(), password_give: $("#password").val() };
+            $.ajax({
+                type: "POST",
+                url: "/mountain/login",
+                data: { email_give: $("#email").val(), password_give: $("#password").val() },
+                success: function(response) {
+                    if (response['result'] == 'success') {
+                        $.cookie('myToken', response['token']);
+                        alert('로그인 성공');
+                        window.location.href='/mountain/list';
+                    } else {
+                        alert(response['message']);
+                    }
+                }
+            });
+        }
+    </script>
 </head>
 <body>
 <section class="section">
-        <div class="container" style="height: 100%">
-        <div class="columns is-justify-content-center" style="height: 100%">
-            <div class="column is-two-fifths" style="height: 100%">
+        <div class="container">
+        <div class="columns is-justify-content-center">
+            <div class="column is-two-fifths">
                 <div class="card">
                     <header class="card-header">
                         <div class="card-header-title has-background-primary has-background-light has-text-white">로그인
@@ -43,7 +68,7 @@
                         <div class="content">
                             <div class="field">
                                 <p class="control is-expanded has-icons-left has-icons-right">
-                                    <input class="input" type="email" placeholder="Email">
+                                    <input class="input" id="email" type="email" placeholder="Email">
                                     <span class="icon is-small is-left">
                                         <i class="fa fa-envelope"></i>
                                     </span>
@@ -55,7 +80,7 @@
                             </div>
                             <div class="field">
                                 <p class="control has-icons-left has-icons-right">
-                                    <input class="input" type="password" placeholder="Password">
+                                    <input class="input" id="password" type="password" placeholder="Password">
                                     <span class="icon is-small is-left">
                                         <i class="fa fa-lock"></i>
                                     </span>
@@ -68,7 +93,7 @@
                         </div>
                     </div>
                     <footer class="card-footer">
-                        <a href="#" class="card-footer-item has-text-primary-dark">로그인</a>
+                        <a href="#" onclick="login()" class="card-footer-item has-text-primary-dark">로그인</a>
                         <a href="#" class="card-footer-item has-text-primary-dark">회원가입</a>
                     </footer>
                 </div>
