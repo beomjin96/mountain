@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>산넘고 산넘어</title>
+
+    <!-- Bulma CSS 링크 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- js -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <style>
+        body {
+            height: 100vh;
+            background: url('https://images.pexels.com/photos/1461027/pexels-photo-1461027.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260') no-repeat center;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .section {
+            width: 100%;
+        }
+
+        .email-input,
+        .nick-input {
+            width: 80%;
+        }
+
+        .is-danget {
+            color: red;
+        }
+    </style>
+
+    <script>
+
+        function loginPage() {
+            window.location.href = "/mountain/login"
+        }
+
+        function account() {
+            $.ajax({
+                type: "POST",
+                url: "/mountain/account",
+                data: {
+                    email_give: $('#userid').val(),
+                    password_give: $('#userpw').val(),
+                    nickname_give: $('#usernick').val()
+                },
+                success: function (response) {
+                    console.log("response", response)
+                    if (response['result'] == 'success') {
+                        alert('회원가입이 완료되었습니다.')
+                        window.location.href = '/mountain/login'
+                    } else {
+                        alert(response['msg'])
+                    }
+                }
+            })
+        }
+
+        // 이메일, 비밀번호, 닉네임 정규식
+
+        function is_email(asValue) {
+            var regExp = /^[a-zA-Z0-9+-\_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+            return regExp.test(asValue);
+        }
+
+        function is_nickname(asValue) {
+            var regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{2,10}$/;
+            return regExp.test(asValue);
+        }
+
+        function is_password(asValue) {
+            var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{8,20}$/;
+            return regExp.test(asValue);
+        }
+
+        // 이메일 유효성 검사
+
+        function emailConfirm() {
+            let userEmail = $("#userid").val()
+            if (userEmail == "") {
+                $("#help-email").text("이메일을 입력해주세요.").addClass('is-danger')
+                $("#userid").focus()
+                return;
+            }
+            if (!is_email(userEmail)) {
+                $("#help-email").text("이메일의 형식을 확인해주세요. 영문과 숫자, 특수문자(@) 사용 가능. 2-10자 길이").addClass("is-danger")
+                $("#userid").focus()
+                return;
+            }
+            $("#help-email").addClass("is-loading")
+            $.ajax({
+                type: "POST",
+                url: "/mountain/account",
+                data: {
+                    email_give: userEmail,
+                    password_give: $('#userpw').val(),
+                    nickname_give: $('#usernick').val()
+                },
+                success: function (response) {
+                    console.log(response)
+                    if (response["exists"]) {
+                        $("#help-email").textContent("이미 존재하는 이메일입니다.").addClass("is-danger")
+                        $("#userid").focus()
+                    } else {
+                        $("#help-email").text("사용할 수 있는 이메일입니다.").removeClass("is-danger").addClass("is-success")
+                    }
+                    $("#help-email").removeClass("is-loading")
+
+                }
+            });
+        }
+
+        // 닉네임 유효성 검사
+
+        function nickConfirm() {
+            let userNick = $("#usernick").val()
+            if (userNick == "") {
+                $("#help-nick").text("닉네임을 입력해주세요.").addClass('is-danger')
+                $("#usernick").focus()
+                return;
+            }
+            if (!is_nickname(userNick)) {
+                $("#help-nick").text('아이디는 2-10자의 영문과 숫자와 일부 특수문자(._-)만 입력 가능합니다.').addClass('is-danger')
+                $("#usernick").focus()
+                return;
+            }
+            $.ajax({
+                type: "POST",
+                url: "/mountain/account",
+                data: {
+                    email_give: $('#userid').val(),
+                    password_give: $('#userpw').val(),
+                    nickname_give: $('#usernick').val()
+                },
+                success: function (response) {
+                    console.log(response)
+                    if (response["exists"]) {
+                        $("#help-nick").textContent("이미 존재하는 닉네임입니다.").addClass("is-danger")
+                        $("#usernick").focus()
+                    } else {
+                        $("#help-nick").text("사용할 수 있는 이메일입니다.").removeClass("is-danger").addClass("is-success")
+                    }
+                    $("#help-nick").removeClass("is-loading")
+
+                }
+            });
+        }
+    </script>
+
+</head>
+
+<body>
+    <h1 class="title">
+    </h1>
+    <section class="section">
+        <div class="container is-half">
+            <div class="columns is-justify-content-center">
+                <div class="column is-half">
+                    <div class="card">
+                        <header class="card-header">
+                            <div class="card-header-title has-background-primary has-background-light has-text-white">
+                                회원가입
+                            </div>
+                        </header>
+                        <div class="card-content">
+                            <div class="content">
+                                <div class="field">
+                                    <p class="control has-icons-left has-icons-right">
+                                        <input id="userid" class="input email-input" type="email" placeholder="Email">
+                                        <button class="button is-primary" onclick="emailConfirm()">중복확인</button>
+                                        <span class="icon is-small is-left">
+                                            <i class="fas fa-envelope"></i>
+                                        </span>
+                                        <span class="icon is-small is-right">
+                                            <i class="fa fa-check"></i>
+                                        </span>
+                                    </p>
+                                </div>
+                                <p id="help-email" class="help email-alert"></p>
+                                <p id="help-email-login" class="help is-danger"></p>
+                                <div class="field">
+                                    <p class="control has-icons-left">
+                                        <input id="userpw" class="input" type="password" placeholder="Password">
+                                        <span class="icon is-small is-left">
+                                            <i class="fa fa-lock"></i>
+                                        </span>
+                                    </p>
+                                    <p id="help-password" class="help is-hidden">영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요.
+                                        특수문자(!@#$%^&*)도
+                                        사용 가능합니다.
+                                    </p>
+                                </div>
+                                <div class="field">
+                                    <p class="control has-icons-left">
+                                        <input class="input" type="password" placeholder="Password">
+                                        <span class="icon is-small is-left">
+                                            <i class="fa fa-lock"></i>
+                                        </span>
+                                    </p>
+                                    <p id="help-password2" class="help is-hidden">비밀번호를 다시 한 번 입력해주세요.</p>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <p class="control has-icons-left">
+                                    <input id="usernick" class="input is-info nick-input" type="text"
+                                        placeholder="nickname">
+                                    <button class="button is-primary" onclick="nickConfirm()">중복확인</button>
+                                </p>
+                                <p id="help-nick" class="help"></p>
+                                <p id="help-nick-login" class="help is-danger"></p>
+                            </div>
+                        </div>
+                        <footer class="card-footer">
+                            <a href="#" class="card-footer-item icon is-small is-left" onclick="loginPage()">로그인</a>
+                            <a href="#" class="card-footer-item" onclick="account()">회원가입</a>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</body>
+
+</html>
