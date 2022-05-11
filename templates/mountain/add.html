@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+       <!-- Import Font-Awesome CDN -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+        <!-- Import JQuery -->
+        <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+        <!-- Bulma CSS 링크 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+
+    <title>산 넘고 산 넘어 ㅣ 글작성</title>
+    <style>
+        .section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+    <script>
+        $(document).ready(function() {
+
+        });
+
+        function api_add() {
+            const mountain = {
+                "title": $("#title").val(),
+                "img_url": $("#img_url").val(),
+                "name": $("#name").val(),
+                "address": $("#address").val(),
+                "level": $("#level option:selected").val(),
+                "content": $("#content").val()
+            }
+
+            console.log(mountain);
+            $.ajax({
+                type: "POST",
+                url: "/mountain/add",
+                data: mountain,
+                success: function (response) {
+                    const message = response['message'];
+                    alert(message);
+                    window.location.href='/mountain/list';
+                }
+            });
+
+        }
+    </script>
+</head>
+<body>
+<section class="section">
+    <div class="box" style="margin-top:100px;">
+        <div class="field">
+            <label class="label">제목</label>
+            <div class="control">
+                <input id="title" class="input" type="Title" placeholder="ex)북한산 초보자 등산코드">
+            </div>
+        </div>
+
+        <div>
+            <label class="label">이미지 업로드</label>
+            <div class="file has-name is-fullwidth">
+                <label class="file-label">
+                    <input id="img_url" class="file-input" type="file" name="resume">
+                    <span class="file-cta"><span class="file-icon">
+                        <i class="fas fa-upload"></i></span>
+                        <span class="file-label">파일 선택</span>
+                    </span>
+                    <span class="file-name">Screen Shot 2017-07-29 at 15.54.25.png</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">산이름</label>
+            <div class="control">
+                <input id="name" class="input" type="name" placeholder="ex) 북한산">
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">주소</label>
+            <div class="control">
+                <input id="address" class="input" type="address" placeholder="ex) 서울시 성북구 정릉동 807-11">
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">난이도</label>
+            <div class="select is-multiple is-focused">
+                <select id="level">
+                    <option selected>선택</option>
+                    <option>⭐⭐⭐⭐⭐</option>
+                    <option>⭐⭐⭐⭐</option>
+                    <option>⭐⭐⭐</option>
+                    <option>⭐⭐</option>
+                    <option>⭐</option>
+                </select>
+            </div>
+        </div>
+
+        <label class="label">본문글</label>
+        <textarea id="content" class="textarea is-grey" placeholder="ex) 우이역 & 백운대 최단코드 추천!"></textarea>
+
+        <div class="buttons">
+            <button onclick="" class="button is-primary" style="margin-top:10px;">돌아가기</button>
+            <button onclick="api_add()" class="button is-primary" style="margin-top:10px;">등록하기</button>
+        </div>
+    </div>
+</section>
+</body>
+</html>
