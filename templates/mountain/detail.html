@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <!-- Import Bulma CSS CDN -->
+    <link rel="stylesheet" href="/static/css/bulma.css" />
+
+    <!-- Import Font-Awesome CDN -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+    <!-- Import JQuery -->
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+        * {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        html, body { height: 100%; }
+        section {
+            background: url("/static/images/photo-4.jpg") no-repeat;
+            background-size: cover;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            show_order()
+        })
+        function show_order() {
+            $.ajax({
+                type: 'GET',
+                url: '/mountain/test/add',
+                data: {},
+                success: function (response) {
+                    let list = response['details']
+                    console.log(list)
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="#">
+            <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
+        </a>
+
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+
+    <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+            <a href="/" class="navbar-item">
+                    Home
+            </a>
+        </div>
+
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <div class="buttons">
+                    <a href="/mountain/add" class="button is-primary">
+                            <strong>글쓰기</strong>
+                    </a>
+                    <a href="/mountain/login" class="button is-light">
+                           로그아웃
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="section">
+        <div class="container">
+            <div class="columns is-justify-content-center">
+                <div class="column is-two-fifths">
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title">{{ mountain['title'] }}</p>
+                            <span class="mr-2 mt-1">{{ mountain['reg_datex'] }} </span>
+                            <span class="mr-2 mt-1">{{ mountain['nickname'] }}</span>
+                        </header>
+
+                        <div class="card-image">
+                            <figure class="image is-4by3">
+                                <img src="{{ mountain['image_url'] }}">
+                            </figure>
+                        </div>
+                        <div class="card-content">
+                            <!-- 주소 난이도 코멘트 / 닉네임, 작성일자 -->
+                            <div class="field">
+                                <label for="">산 이름</label>
+                                <input type="text" class="input" value="{{ mountain['name'] }}" readonly />
+                            </div>
+                            <div class="field">
+                                <label for="">주소</label>
+                                <input type="text" class="input" value="{{ mountain['address'] }}" readonly />
+                            </div>
+                            <div class="field">
+                                <label for="">난이도</label>
+                                <input type="text" class="input" value="{{ mountain['star_image'] }}" readonly />
+                            </div>
+                            <div class="field">
+                                <label for="">내용</label>
+                                <textarea class="textarea" name="" id="" cols="30" rows="10" readonly>{{ mountain['content'] }}</textarea>
+                            </div>
+                        </div>
+                        <footer class="card-footer">
+                            <a href="#" class="card-footer-item">수정</a>
+                            <a href="#" class="card-footer-item">삭제</a>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+
+    </div>
+    </section>
+
+
+</body>
+</html>

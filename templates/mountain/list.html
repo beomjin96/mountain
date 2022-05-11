@@ -2,77 +2,114 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <title>산 넘고 산 넘어 리스트</title>
+    <title>Title</title>
+    <!-- Import Bulma CSS CDN -->
+    <link rel="stylesheet" href="/static/css/bulma.css" />
+
+    <!-- Import Font-Awesome CDN -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+    <!-- Import Slick CDN -->
+    <link rel="stylesheet" type="text/css" href="/static/css/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/slick/slick-theme.css"/>
+
+    <!-- Import JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Dongle&family=Jua&family=Nanum+Brush+Script&family=Nanum+Pen+Script&family=Sunflower:wght@500&display=swap');
-
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            font-family: 'Noto Sans KR', sans-serif;
         }
-
-        a {
-            text-decoration: none;
+        html, body { height: 100%; }
+        section {
+            background: url("/static/images/photo-1.jpg") no-repeat;
+            background-size: cover;
         }
-
-        #container {
-            margin: 0 auto;
-            width: 1200px;
+        .image img {
+            height: 230px;
         }
-
-        header {
-            width: 100%;
-            height: 100px;
+        .card {
+            width: 30%;
         }
-
-        #logo {
-            float: left;
-            width: 250px;
-            height: 100px;
-            line-height: 100px;
-            padding-left: 20px;
-        }
-        #logo2 {
-            float: right;
-            width: 250px;
-            height: 100px;
-            line-height: 100px;
-            padding-top: 30px;
-        }
-
-        #logo h1 {
-            font-family: 'Black Han Sans', sans-serif;
-            font-weight: 700;
-            font-size: 35px;
-            color: green;
-            text-shadow: 0 -1px 0 black;
+        #banner {
+            height: 200px;
         }
     </style>
 </head>
-
 <body>
-<div id="container">
-    <header>
-        <div id="logo">
-            <a href="/login">
-                <h1>산 넘고 산 넘어</h1>
-            </a>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="#">
+            <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
+        </a>
+
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+
+    <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+                <a href="/" class="navbar-item">
+                        Home
+                </a>
         </div>
 
-        <div id="logo2">
-            <a href="/add">
-                <button class="button">글쓰기</button>
-            </a>
-            <a href="/login">
-                <button class="button">로그아웃</button>
-            </a>
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <div class="buttons">
+                    <a href="/mountain/add" class="button is-primary">
+                            <strong>글쓰기</strong>
+                    </a>
+                    <a href="/mountain/login" class="button is-light">
+                           로그아웃
+                    </a>
+                </div>
+            </div>
         </div>
+    </div>
+</nav>
+    <section class="section">
+        <div class="container">
+            <div class="box mb-5 has-background-danger-light is-align-items-center is-flex is-justify-content-center" id="banner">
+                <div class="title is-2">산 넘고 산 넘어</div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="is-flex box is-justify-content-space-around is-flex-wrap-wrap">
+                {% for mountain in mountain_list %}
+                    <div class="card mt-2 mb-5">
+                    <header class="card-header">
+                        <p class="card-header-title">{{ mountain['title'] }}</p>
+                        <span class="mr-2 mt-2">{{ mountain['reg_datex'] }}</span>
+                        <span class="mr-2 mt-2">{{ mountain['nickname'] }}</span>
+                    </header>
+                    <div class="card-image">
+                        <figure class="image">
+                            <img src="{{ mountain['image_url'] }}" alt="" style="height: 230px">
+                        </figure>
+                    </div>
+                    <div class="card-content">
+                        <span class="has-text-weight-bold">{{ mountain['name'] }}</span>
+                        <div class="is-flex is-flex-direction-row-reverse">
+                            <span class="has-text-weight-bold">{{ mountain['star_image'] }}</span>
+                        </div>
+                    </div>
+                    <footer class="card-footer">
+                        <a href="/mountain/detail?no_give={{ mountain['no'] }}" class="card-footer-item">상세보기</a>
+                    </footer>
+                </div>
+                {% endfor %}
+            </div>
+    </div>
+    </section>
 
-    </header>
 
-
-</div>
 </body>
+<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="/static/css/slick/slick.js"></script>
 </html>
