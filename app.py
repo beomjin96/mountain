@@ -1,5 +1,5 @@
-from asyncio.windows_events import NULL
 import hashlib
+from xmlrpc.client import boolean
 from pymongo import MongoClient
 import ssl
 
@@ -30,27 +30,39 @@ def login_view():
     return render_template('/mountain/login.html')
 
 
-@app.route('/mountain/account', methods=['GET'])
+@app.route('/mountain/account')
 def account_view():
     return render_template('/mountain/account.html')
 
 
-@app.route('/mountain/account', methods=['POST', 'GET'])
+@app.route('/mountain/account', methods=['POST'])
 def api_account():
     email_receive = request.form['email_give']
     password_receive = request.form['password_give']
     nickname_receive = request.form['nickname_give']
 
-    exists = bool(db.users.find_one(
-        {"email": email_receive, "nickname": nickname_receive}))
-
     password_hash = hashlib.sha256(
         password_receive.encode('utf-8')).hexdigest()
 
-    db.users.insert_one(
-        {'email': email_receive, 'password': password_hash, 'nickname': nickname_receive})
+    doc = {
+        "email": email_receive,
+        "password": password_hash,
+        "nickname": nickname_receive
+    }
+    db.users.insert_one(doc)
 
-    return jsonify({'result': 'success', 'exists': exists})
+    return jsonify({'result': 'success'})
+
+
+@app.route('/mountain/account/user', methods=["POST"])
+def check_account():
+    email_receive = request.form['email_give']
+    nickname_receive = request.form['nickname_give']
+
+    exists = bool(db.users.find_one({"email": email_receive}))
+    exists2 = bool(db.users.find_one({"nickname": nickname_receive}))
+
+    return jsonify({'result': 'success', 'exists': exists, 'exists2': exists2})
 
     # print(
     #     f"email={email_receive}\npassword={password_receive}\nnickname={nickname_receive}")
