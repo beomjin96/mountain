@@ -32,6 +32,14 @@
             width: 100%;
         }
 
+        .card {
+            border-radius: 10px;
+        }
+
+        .is-info.input {
+            border-color: #dbdbdb;
+        }
+
         .email-input,
         .nick-input {
             width: 80%;
@@ -53,6 +61,16 @@
         .focus-red {
             border: 1px solid red;
         }
+
+        .btn-login:hover,
+        .btn-account:hover {
+            background-color: #DEFFFA;
+            font-weight: bold;
+            color: #00A1BE;
+            border-radius: 3px;
+            transition: ease 0.3s all;
+            opacity: 0.8;
+        }
     </style>
 
     <script>
@@ -62,7 +80,11 @@
         }
 
         function account() {
-            if (!varifyEmail() || !varifyPassword() || !varifyNick()) return;
+
+            if (!varifyEmail() || !varifyPassword() || !varifyNick()) {
+                return;
+            }
+
 
             // 서버에서 가져온 데이터
             $.ajax({
@@ -106,12 +128,7 @@
         }
 
 
-        function emailConfirm() {
-            doublCheckEmail()
-        }
-
         // 이메일 유효성 검사
-
         function varifyEmail() {
             let userEmail = $("#userid").val()
             if (userEmail == "") {
@@ -136,25 +153,29 @@
                 $('.email-icon').removeClass('danger')
                 $("#userid").removeClass('is-danger')
             }
-            doublCheckEmail()
             return true
+
         }
 
         // 이메일 중복 검사
-
         function doublCheckEmail() {
             $.ajax({
-                type: "GET",
+                type: "POST",
                 url: "/mountain/account",
                 data: {
                     email_give: $("#userid").val(),
                     password_give: $('#userpw').val(),
-                    nickname_give: $('#usernick').val()
+                    nickname_give: $('#usernick').val(),
                 },
                 success: function (response) {
                     if (response["exists"]) {
                         $("#help-email").text("이미 존재하는 이메일입니다.").addClass("is-danger")
+                        $("#userid").addClass('is-danger')
+                        $('.check-email').addClass('is-hidden')
+                        $('.email-icon').addClass('danger')
+                        $('.warn').removeClass('is-hidden').addClass('danger')
                         $("#userid").focus()
+                        return false
                     } else {
                         $("#help-email").text("사용할 수 있는 이메일입니다.").removeClass("is-danger").addClass("is-success")
                         $('.warn').addClass('is-hidden')
@@ -162,6 +183,7 @@
                         $('.email-icon').removeClass('danger')
                         $("#userid").removeClass('is-danger')
                     }
+                    return true
                 }
             })
         }
@@ -244,14 +266,13 @@
                 $('.user-icon').removeClass('danger')
                 $("#usernick").removeClass('is-danger')
             }
-            doubleCheckNick()
             return true;
         }
 
         // 닉네임 중복 검사
         function doubleCheckNick() {
             $.ajax({
-                type: "GET",
+                type: "POST",
                 url: "/mountain/account",
                 data: {
                     email_give: $('#userid').val(),
@@ -269,8 +290,6 @@
                         $('.user-icon').removeClass('danger')
                         $("#usernick").removeClass('is-danger')
                     }
-                    $("#help-nick").removeClass("is-loading")
-
                 }
             });
         }
@@ -299,7 +318,9 @@
                                     <p class="control has-icons-left email-control is-flex">
                                         <input id="userid" class="input email-input mr-5" type="email"
                                             placeholder="Email">
-                                        <span class="icon is-small is-left">
+                                        <input claess="email-check" type="hidden" name="emailDuplication"
+                                            value="emailUnChecked">
+                                        <span class=" icon is-small is-left">
                                             <i class="fa fa-envelope email-icon"></i>
                                         </span>
                                         <span class="icon is-small is-right email-cotrol-icon">
@@ -307,7 +328,8 @@
                                                 id="password-exclamation"></i>
                                             <i class="fa fa-check check-email"></i>
                                         </span>
-                                        <button class="button is-primary" onclick="varifyEmail()">중복확인</button>
+                                        <button class="button is-primary btn-email-check"
+                                            onclick="doublCheckEmail()">중복확인</button>
                                     </p>
                                 </div>
                                 <p id="help-email" class="help email-alert"></p>
@@ -353,15 +375,16 @@
                                             id="password-exclamation"></i>
                                         <i class="fa fa-check check-nick"></i>
                                     </span>
-                                    <button class="button is-primary" onclick="varifyNick()">중복확인</button>
+                                    <button class="button is-primary" onclick="doubleCheckNick()">중복확인</button>
                                 </p>
                                 <p id="help-nick" class="help"></p>
                                 <p id="help-nick-login" class="help is-danger"></p>
                             </div>
                         </div>
                         <footer class="card-footer">
-                            <a href="#" class="card-footer-item icon is-small is-left" onclick="loginPage()">로그인</a>
-                            <a href="#" class="card-footer-item" onclick="account()">회원가입</a>
+                            <a href="#" class="card-footer-item btn-login" onclick="loginPage()">로그인</a>
+                            <a href="#" class="card-footer-item btn-account" onclick="account()">회원가입</a>
+                            <input type="hidden" name="checked_id" value="">
                         </footer>
                     </div>
                 </div>
