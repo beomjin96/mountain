@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Import Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Import Bulma CSS CDN -->
+    <link rel="stylesheet" href="/static/css/bulma.css" />
+
+    <!-- Import Font-Awesome CDN -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+    <!-- Import JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <!-- Import File Upload Javascript -->
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+
+    <title>산넘고 산넘어-Upload</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+
+        * {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        html {
+            height: 950px !important;
+        }
+
+        html,
+        body,
+        .section {
+            height: 100%;
+        }
+
+        .section {
+            background: url("/static/images/background-mountains.png") no-repeat;
+            background-size: cover;
+        }
+
+        a:hover {
+            text-decoration: none;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            // 파일 업로드 관련 코드
+            bsCustomFileInput.init()
+        });
+
+        function logout() {
+            $.removeCookie('myToken');
+            window.location.href = '/';
+        }
+        function api_add() {
+            // 파일 업로드 관련 코드
+            const file = $('#file')[0].files[0]
+            const form_data = new FormData()
+            // ──────────────────────────────────────
+            const title = $("#title").val();
+            const name = $("#name").val();
+            const address = $("#address").val();
+            const level = $("#level option:selected").val();
+            const content = $("#content").val()
+
+            form_data.append("file", file);
+            form_data.append("title", title);
+            form_data.append("name", name);
+            form_data.append("address", address);
+            form_data.append("level", level);
+            form_data.append("content", content);
+            console.log(`form_data = ${form_data}`);
+
+            $.ajax({
+                type: "POST",
+                url: "/mountain/add",
+                data: form_data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert("등록 완료!")
+                        window.location.href = '/mountain/list';
+                    } else {
+                        alert("등록 실패!")
+                    }
+                }
+            });
+
+        }
+    </script>
+</head>
+
+<body>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="#">
+                <img src="/static/images/home-logo.png">
+            </a>
+
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
+                data-target="navbarBasicExample">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+
+        <div id="navbarBasicExample" class="navbar-menu">
+            <div class="navbar-start">
+                <a href="/mountain/list" class="navbar-item">Home</a>
+            </div>
+
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a href="/mountain/login" class="button is-light" onclick="logout()">로그아웃</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <section class="section">
+        <div class="container">
+            <div class="columns is-justify-content-center">
+                <div class="column is-two-fifths">
+                    <div class="bulma-card">
+                        <header class="bulma-card-header">
+                            <div
+                                class="bulma-card-header-title has-background-primary has-background-light has-text-white">
+                                등록
+                            </div>
+                        </header>
+                        <div class="bulma-card-content">
+                            <div class="content">
+                                <label for="title" class="label">제목</label>
+                                <div class="field">
+                                    <p class="control is-expanded has-icons-left has-icons-right">
+                                        <input class="input" id="title" type="email" placeholder="Title">
+                                        <span class="icon is-small is-left">
+                                            <i class="fa fa-pencil"></i>
+                                        </span>
+                                        <span class="icon is-small is-right">
+                                            <i class="fa fa-exclamation-triangle is-hidden" id="email-exclamation"></i>
+                                        </span>
+                                    </p>
+                                </div>
+
+                                <label for="name" class="label">산 이름</label>
+                                <div class="field">
+                                    <p class="control has-icons-left has-icons-right">
+                                        <input class="input" id="name" type="input" placeholder="Name">
+                                        <span class="icon is-small is-left">
+                                            <i class="fa fa-hashtag"></i>
+                                        </span>
+                                        <span class="icon is-small is-right">
+                                            <i class="fa fa-exclamation-triangle is-hidden"
+                                                id="password-exclamation"></i>
+                                        </span>
+                                    </p>
+                                    <p class="help is-danger is-hidden" id="password-error-message">비밀번호를 입력해 주세요.</p>
+                                </div>
+
+                                <label for="address" class="label">주소</label>
+                                <div class="field">
+                                    <p class="control has-icons-left has-icons-right">
+                                        <input class="input" id="address" type="input" placeholder="Address">
+                                        <span class="icon is-small is-left">
+                                            <i class="fa fa-location-arrow"></i>
+                                        </span>
+                                        <span class="icon is-small is-right">
+                                            <i class="fa fa-exclamation-triangle is-hidden"
+                                                id="password-exclamation"></i>
+                                        </span>
+                                    </p>
+                                    <p class="help is-danger is-hidden" id="password-error-message">비밀번호를 입력해 주세요.</p>
+                                </div>
+
+                                <label for="level" class="label">등반 난이도</label>
+                                <div class="select is-fullwidth mb-3">
+                                    <select name="level" id="level">
+                                        <option value="1">⭐</option>
+                                        <option value="2">⭐⭐</option>
+                                        <option value="3">⭐⭐⭐</option>
+                                        <option value="4">⭐⭐⭐⭐</option>
+                                        <option value="5">⭐⭐⭐⭐⭐</option>
+
+                                    </select>
+                                </div>
+
+                                <label class="label">이미지</label>
+                                <div class="custom-file mb-2">
+                                    <input type="file" class="custom-file-input" id="file">
+                                    <label class="custom-file-label" for="file">파일 선택하기</label>
+                                </div>
+
+                                <label for="content" class="label">내용</label>
+                                <div class="field">
+                                    <p class="control has-icons-left has-icons-right">
+                                        <textarea class="textarea" name="content" id="content" cols="30"
+                                            rows="10"></textarea>
+                                    </p>
+                                    <p class="help is-danger is-hidden" id="password-error-message">비밀번호를 입력해 주세요.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <footer class="bulma-card-footer">
+                            <a href="#" onclick="api_add()" class="card-footer-item has-text-primary-dark">등록하기</a>
+                            <a href="/mountain/list" class="card-footer-item has-text-primary-dark">돌아가기</a>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>

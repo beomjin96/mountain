@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>산넘고 산넘어</title>
+
+    <!-- Import Bulma CSS CDN -->
+    <link rel="stylesheet" href="/static/css/bulma.css" />
+
+    <!-- Import Font-Awesome CDN -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+    <!-- Import JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <style>
+        body {
+            height: 100vh;
+            background: url('https://images.pexels.com/photos/1461027/pexels-photo-1461027.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260') no-repeat center;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .section {
+            width: 100%;
+        }
+
+        .card {
+            border-radius: 10px;
+        }
+
+        .is-info.input {
+            border-color: #dbdbdb;
+        }
+
+        .email-input,
+        .nick-input {
+            width: 80%;
+        }
+
+        .email-input {
+            position: relative;
+        }
+
+        .control.has-icons-left .icon {
+            position: absolute;
+            right: 124px;
+        }
+
+        .danger {
+            color: red;
+        }
+
+        .focus-red {
+            border: 1px solid red;
+        }
+
+        .btn-login:hover,
+        .btn-account:hover {
+            background-color: #DEFFFA;
+            font-weight: bold;
+            color: #00A1BE;
+            border-radius: 3px;
+            opacity: 0.8;
+        }
+    </style>
+
+    <script>
+        function account() {
+            if (!varifyEmail() || !varifyPassword() || !varifyNick()) return;
+
+            $.ajax({
+                type: "POST",
+                url: "/mountain/account",
+                data: {
+                    email_give: $('#userid').val(),
+                    password_give: $('#userpw').val(),
+                    nickname_give: $('#usernick').val()
+                },
+                success: function (response) {
+                    console.log("response", response)
+                    if (response['result'] == 'success') {
+                        alert('회원가입이 완료되었습니다.')
+                        window.location.href = '/mountain/login'
+                    } else {
+                        alert(response['msg'])
+                        $("#userEmail").focus()
+                    }
+                }
+            })
+        }
+
+        // 이메일, 비밀번호, 닉네임 정규식
+        function is_email(asValue) {
+            const regExp = /^[a-zA-Z0-9+-\_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+            return regExp.test(asValue);
+        }
+
+        function is_nickname(asValue) {
+            const regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{2,10}$/;
+            return regExp.test(asValue);
+        }
+
+        function is_password(asValue) {
+            const regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{8,20}$/;
+            return regExp.test(asValue);
+        }
+
+
+        // 이메일 유효성 검사
+        function varifyEmail() {
+            let userEmail = $("#userid").val()
+            if (userEmail == "") {
+                $("#help-email").text("이메일을 입력해주세요.").addClass('is-danger')
+                $('.check-email').addClass('is-hidden')
+                $('.email-icon').addClass('danger')
+                $('.warn').removeClass('is-hidden').addClass('danger')
+                $("#userid").addClass('is-danger')
+                $("#userid").focus()
+                return false;
+            } else if (!is_email(userEmail)) {
+                $("#help-email").text("이메일의 형식을 확인해주세요. 영문과 숫자, 특수문자(@) 사용 가능. 2-10자 길이").addClass("is-danger")
+                $('.check-email').addClass('is-hidden')
+                $('.email-icon').addClass('danger')
+                $('.warn').removeClass('is-hidden').addClass('danger')
+                $("#userid").addClass('is-danger')
+                $("#userid").focus()
+                return false;
+            } else {
+                $('.check-email').removeClass('is-hidden')
+                $('.warn').addClass('is-hidden')
+                $('.email-icon').removeClass('danger')
+                $("#userid").removeClass('is-danger')
+            }
+            return true
+
+        }
+
+        // 이메일 중복 검사
+        function doublCheckEmail() {
+            $.ajax({
+                type: "POST",
+                url: "/mountain/account",
+                data: {
+                    email_give: $("#userid").val(),
+                    password_give: $('#userpw').val(),
+                    nickname_give: $('#usernick').val(),
+                },
+                success: function (response) {
+                    if (response["exists"]) {
+                        $("#help-email").text("이미 존재하는 이메일입니다.").addClass("is-danger")
+                        $("#userid").addClass('is-danger')
+                        $('.check-email').addClass('is-hidden')
+                        $('.email-icon').addClass('danger')
+                        $('.warn').removeClass('is-hidden').addClass('danger')
+                        $("#userid").focus()
+                        return false
+                    } else {
+                        $("#help-email").text("사용할 수 있는 이메일입니다.").removeClass("is-danger").addClass("is-success")
+                        $('.warn').addClass('is-hidden')
+                        $('.check-email').removeClass('is-hidden')
+                        $('.email-icon').removeClass('danger')
+                        $("#userid").removeClass('is-danger')
+                    }
+                    return true
+                }
+            })
+        }
+
+        // 비밀번호 유효성 검사
+        function varifyPassword() {
+            let userPw = $("#userpw").val()
+            let userPw2 = $("#userpw2").val()
+
+            if (userPw == '') {
+                $("#help-password").text("비밀번호를 입력해주세요.").addClass('is-danger')
+                $('.check-pw').addClass('is-hidden')
+                $('.lock-icon').addClass('danger')
+                $('.pw-warn').removeClass('is-hidden').addClass('danger')
+                $("#userpw").addClass('is-danger')
+                $("#userpw").focus()
+                return false;
+            } else if (!is_password(userPw)) {
+                $("#help-password").text("비밀번호의 형식을 확인해주세요. 영문과 숫자 필수 포함, 특수문자(!@#$%^&*) 사용가능 8-20자").addClass('is-danger')
+                $('.check-pw').addClass('is-hidden')
+                $('.lock-icon').addClass('danger')
+                $('.pw-warn').removeClass('is-hidden').addClass('danger')
+                $("#userpw").addClass('is-danger')
+                $("#userpw").focus()
+                return false;
+            } else {
+                $("#help-password").text("사용할 수 있는 비밀번호입니다.").removeClass('is-danger').addClass('is-success')
+                $('.pw-warn').addClass('is-hidden')
+                $('.check-pw').removeClass('is-hidden')
+                $('.lock-icon').removeClass('danger')
+                $("#userpw").removeClass('is-danger')
+            }
+            if (userPw2 == '') {
+                $("#help-password2").text("비밀번호를 입력해주세요.").addClass('is-danger')
+                $('.check-pw2').addClass('is-hidden')
+                $('.lock2-icon').addClass('danger')
+                $('.pw2-warn').removeClass('is-hidden').addClass('danger')
+                $("#userpw2").addClass('is-danger')
+                $("#userpw2").focus()
+                return false;
+            } else if (userPw2 != userPw) {
+                $("#help-password2").text("비밀번호가 일치하지 않습니다.").addClass('is-danger')
+                $('.check-pw2').addClass('is-hidden')
+                $('.lock2-icon').addClass('danger')
+                $('.pw2-warn').removeClass('is-hidden').addClass('danger')
+                $("#userpw2").addClass('is-danger')
+                $("#userpw2").focus()
+                return false;
+            } else {
+                $("#help-password2").text("비밀번호가 일치합니다.").removeClass('is-danger').addClass("is-success")
+                $('.check-pw2').removeClass('is-hidden')
+                $('.pw2-warn').addClass('is-hidden')
+                $('.lock2-icon').removeClass('danger')
+            }
+            return true
+        }
+
+        // 닉네임 유효성 검사
+        function varifyNick() {
+            let userNick = $("#usernick").val()
+            if (userNick == "") {
+                $("#help-nick").text("닉네임을 입력해주세요.").addClass('is-danger')
+                $('.fa-check').addClass('is-hidden')
+                $('.user-icon').addClass('danger')
+                $('.nick-warn').removeClass('is-hidden').addClass('danger')
+                $("#usernick").addClass('is-danger')
+                $("#usernick").focus()
+                return false;
+            } else if (!is_nickname(userNick)) {
+                $("#help-nick").text('아이디는 2-10자의 영문과 숫자와 일부 특수문자(._-)만 입력 가능합니다.').addClass('is-danger')
+                $('.fa-check').addClass('is-hidden')
+                $('.user-icon').addClass('danger')
+                $('.nick-warn').removeClass('is-hidden').addClass('danger')
+                $("#usernick").addClass('is-danger')
+                $("#usernick").focus()
+                return false;
+            } else {
+                $('.check-nick').removeClass('is-hidden')
+                $('.nick-warn').addClass('is-hidden')
+                $('.user-icon').removeClass('danger')
+                $("#usernick").removeClass('is-danger')
+            }
+            return true;
+        }
+
+        // 닉네임 중복 검사
+        function doubleCheckNick() {
+            $.ajax({
+                type: "POST",
+                url: "/mountain/account",
+                data: {
+                    email_give: $('#userid').val(),
+                    password_give: $('#userpw').val(),
+                    nickname_give: $('#usernick').val()
+                },
+                success: function (response) {
+                    if (response["exists"]) {
+                        $("#help-nick").text("이미 존재하는 닉네임입니다.").addClass("is-danger")
+                        $("#usernick").focus()
+                    } else {
+                        $("#help-nick").text("사용할 수 있는 닉네임입니다.").removeClass("is-danger").addClass("is-success")
+                        $('.nick-warn').addClass('is-hidden')
+                        $('.check-nick').removeClass('is-hidden')
+                        $('.user-icon').removeClass('danger')
+                        $("#usernick").removeClass('is-danger')
+                    }
+                }
+            });
+        }
+
+    </script>
+
+</head>
+
+<body>
+    <h1 class="title">
+        <img src="/static/images/banner.png" alt="">
+    </h1>
+    <section class="section">
+        <div class="container is-half">
+            <div class="columns is-justify-content-center">
+                <div class="column is-half">
+                    <div class="card">
+                        <header class="card-header">
+                            <div class="card-header-title has-background-primary has-background-light has-text-white">
+                                회원가입
+                            </div>
+                        </header>
+                        <div class="card-content">
+                            <div class="content">
+                                <div class="field">
+                                    <p class="control has-icons-left email-control is-flex">
+                                        <input id="userid" class="input email-input mr-5" type="email"
+                                            placeholder="Email">
+                                        <input claess="email-check" type="hidden" name="emailDuplication"
+                                            value="emailUnChecked">
+                                        <span class=" icon is-small is-left">
+                                            <i class="fa fa-envelope email-icon"></i>
+                                        </span>
+                                        <span class="icon is-small is-right email-cotrol-icon">
+                                            <i class="fa fa-exclamation-triangle is-hidden warn"
+                                                id="password-exclamation"></i>
+                                            <i class="fa fa-check check-email"></i>
+                                        </span>
+                                        <button class="button is-primary btn-email-check"
+                                            onclick="doublCheckEmail()">중복확인</button>
+                                    </p>
+                                </div>
+                                <p id="help-email" class="help email-alert"></p>
+                                <p id="help-email-login" class="help is-danger"></p>
+                                <div class="field">
+                                    <p class="control has-icons-left has-icons-right">
+                                        <input id="userpw" class="input" type="password" placeholder="Password">
+                                        <span class="icon is-small is-left">
+                                            <i class="fa fa-lock lock-icon"></i>
+                                        </span>
+                                        <span class="icon is-small is-right">
+                                            <i class="fa fa-exclamation-triangle is-hidden pw-warn"
+                                                id="password-exclamation"></i>
+                                            <i class="fa fa-check check-pw"></i>
+                                        </span>
+                                    </p>
+                                    <p id="help-password" class="help"></p>
+                                </div>
+                                <div class="field">
+                                    <p class="control has-icons-left has-icons-right">
+                                        <input id="userpw2" class="input" type="password" placeholder="Password">
+                                        <span class="icon is-small is-left">
+                                            <i class="fa fa-lock lock2-icon"></i>
+                                        </span>
+                                        <span class="icon is-small is-right">
+                                            <i class="fa fa-exclamation-triangle is-hidden pw2-warn"
+                                                id="password-exclamation"></i>
+                                            <i class="fa fa-check check-pw2"></i>
+                                        </span>
+                                    </p>
+                                    <p id="help-password2" class="help"></p>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <p class="control has-icons-left is-flex">
+                                    <input id="usernick" class="input is-info nick-input mr-5" type="text"
+                                        placeholder="nickname">
+                                    <span class="icon is-small is-left">
+                                        <i class="fa fa-user user-icon"></i>
+                                    </span>
+                                    <span class="icon is-small icon-check">
+                                        <i class="fa fa-exclamation-triangle is-hidden nick-warn"
+                                            id="password-exclamation"></i>
+                                        <i class="fa fa-check check-nick"></i>
+                                    </span>
+                                    <button class="button is-primary" onclick="doubleCheckNick()">중복확인</button>
+                                </p>
+                                <p id="help-nick" class="help"></p>
+                                <p id="help-nick-login" class="help is-danger"></p>
+                            </div>
+                        </div>
+                        <footer class="card-footer">
+                            <a href="#" class="card-footer-item btn-account" onclick="account()">회원가입</a>
+                            <a href="/mountain/login" class="card-footer-item btn-login">돌아가기</a>
+                            <input type="hidden" name="checked_id" value="">
+                        </footer>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</body>
+
+</html>

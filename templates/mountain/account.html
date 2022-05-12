@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>산넘고 산넘어</title>
+
+    <!-- Import Bulma CSS CDN -->
+    <link rel="stylesheet" href="/static/css/bulma.css" />
+
+    <!-- Import Font-Awesome CDN -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+    <!-- account javascript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="/static/js/account.js" defer></script>
+
+    <style>
+        body {
+            height: 100vh;
+            background: url('https://images.pexels.com/photos/1461027/pexels-photo-1461027.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260') no-repeat center;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .section {
+            width: 100%;
+        }
+
+
+        .is-info.input {
+            border-color: #dbdbdb;
+        }
+
+        .email-input,
+        .nick-input {
+            width: 80%;
+        }
+
+        .email-input {
+            position: relative;
+        }
+
+        .control.has-icons-left .icon {
+            position: absolute;
+            right: 124px;
+        }
+
+        .danger {
+            color: red;
+        }
+
+        .focus-red {
+            border: 1px solid red;
+        }
+
+        .btn-login:hover,
+        .btn-account:hover {
+            background-color: #DEFFFA;
+            font-weight: bold;
+            color: #00A1BE;
+            border-radius: 3px;
+            transition: ease 0.3s all;
+            opacity: 0.8;
+        }
+    </style>
+
+</head>
+
+<body>
+    <h1 class="title">
+        <img src="/static/images/title.png" alt="산넘고 산넘어">
+    </h1>
+    <section class="section">
+        <div class="container is-half">
+            <div class="columns is-justify-content-center">
+                <div class="column is-half">
+                    <div class="bulma-card">
+                        <header class="bulma-card-header">
+                            <div
+                                class="bulma-card-header-title has-background-primary has-background-light has-text-white">
+                                회원가입
+                            </div>
+                        </header>
+                        <div class="bulma-card-content">
+                            <div class="content">
+                                <div class="field">
+                                    <p class="control has-icons-left email-control is-flex">
+                                        <input id="userid" class="input email-input mr-5" type="email"
+                                            placeholder="Email">
+                                        <span class=" icon is-small is-left">
+                                            <i class="fa fa-envelope email-icon"></i>
+                                        </span>
+                                        <span class="icon is-small is-right email-cotrol-icon">
+                                            <i class="fa fa-exclamation-triangle is-hidden warn"
+                                                id="password-exclamation"></i>
+                                        </span>
+                                        <button class="button is-primary btn-email-check"
+                                            onclick="doubleCheckEmail()">중복확인</button>
+                                    </p>
+                                </div>
+                                <p id="help-email" class="help email-alert"></p>
+                                <p id="help-email-login" class="help is-danger"></p>
+                                <div class="field">
+                                    <p class="control has-icons-left has-icons-right">
+                                        <input id="userpw" class="input" type="password" placeholder="Password">
+                                        <span class="icon is-small is-left">
+                                            <i class="fa fa-lock lock-icon"></i>
+                                        </span>
+                                        <span class="icon is-small is-right">
+                                            <i class="fa fa-exclamation-triangle is-hidden pw-warn"
+                                                id="password-exclamation"></i>
+                                        </span>
+                                    </p>
+                                    <p id="help-password" class="help"></p>
+                                </div>
+                                <div class="field">
+                                    <p class="control has-icons-left has-icons-right">
+                                        <input id="userpw2" class="input" type="password" placeholder="Password">
+                                        <span class="icon is-small is-left">
+                                            <i class="fa fa-lock lock2-icon"></i>
+                                        </span>
+                                        <span class="icon is-small is-right">
+                                            <i class="fa fa-exclamation-triangle is-hidden pw2-warn"
+                                                id="password-exclamation"></i>
+                                        </span>
+                                    </p>
+                                    <p id="help-password2" class="help"></p>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <p class="control has-icons-left is-flex">
+                                    <input id="usernick" class="input is-info nick-input mr-5" type="text"
+                                        placeholder="nickname">
+                                    <span class="icon is-small is-left">
+                                        <i class="fa fa-user user-icon"></i>
+                                    </span>
+                                    <span class="icon is-small icon-check">
+                                        <i class="fa fa-exclamation-triangle is-hidden nick-warn"
+                                            id="password-exclamation"></i>
+                                    </span>
+                                    <button class="button is-primary" onclick="doubleCheckNick()">중복확인</button>
+                                </p>
+                                <p id="help-nick" class="help"></p>
+                                <p id="help-nick-login" class="help is-danger"></p>
+                            </div>
+                        </div>
+                        <footer class="bulma-card-footer">
+                            <a href="#" class="card-footer-item has-text-primary-dark btn-account"
+                                onclick="account()">회원가입</a>
+                            <a href="/mountain/login" class="card-footer-item has-text-primary-dark btn-login">이전으로</a>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</body>
+
+</html>
