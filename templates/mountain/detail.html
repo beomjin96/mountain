@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <!-- Import Bulma CSS CDN -->
+    <link rel="stylesheet" href="/static/css/bulma.css" />
+
+    <!-- Import Font-Awesome CDN -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+    <!-- Import JQuery -->
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+
+        * {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        section {
+            background: url("/static/images/background-mountains.png") no-repeat;
+            background-size: cover;
+        }
+    </style>
+    <script>
+        function logout() {
+            $.removeCookie('myToken');
+            window.location.href = '/';
+        }
+
+        function api_delete(no_give) {
+            $.ajax({
+                type: "POST",
+                url: "/mountain/delete",
+                data: { "no_give": no_give },
+                success: function (response) {
+                    if (response['result'] == "success") {
+                        alert("삭제 완료!");
+                        window.location.href = '/mountain/list';
+                    } else {
+                        alert("삭제 실패!");
+                    }
+                }
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="#">
+                <img src="/static/images/home-logo.png">
+            </a>
+
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
+                data-target="navbarBasicExample">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+
+        <div id="navbarBasicExample" class="navbar-menu">
+            <div class="navbar-start">
+                <a href="/mountain/list" class="navbar-item">Home</a>
+            </div>
+
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a href="/mountain/add" class="button is-primary">
+                            <strong>글쓰기</strong>
+                        </a>
+                        <a href="/mountain/login" class="button is-light" onclick="logout()">로그아웃</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="section">
+        <div class="container">
+            <div class="columns is-justify-content-center">
+                <div class="column is-two-fifths">
+                    <div class="bulma-card">
+                        <header class="bulma-card-header">
+                            <p class="bulma-card-header-title">{{ mountain['title'] }}</p>
+                            <span class="mr-2 mt-1">{{ mountain['reg_datex'] }} </span>
+                            <span class="mr-2 mt-1">{{ mountain['nickname'] }}</span>
+                        </header>
+
+                        <div class="card-image">
+                            <figure class="image is-4by3">
+                                <img src="/static/images/mountain/{{ mountain['image'] }}" alt="사진을 찾을 수 없음">
+                            </figure>
+                        </div>
+                        <div class="bulma-card-content">
+                            <div class="field">
+                                <label for="name">산 이름</label>
+                                <input type="text" id="name" class="input" value="{{ mountain['name'] }}" readonly />
+                            </div>
+                            <div class="field">
+                                <label for="address">주소</label>
+                                <input type="text" id="address" class="input" value="{{ mountain['address'] }}"
+                                    readonly />
+                            </div>
+                            <div class="field">
+                                <label for="level">난이도</label>
+                                <input type="text" id="level" class="input" value="{{ mountain['star'] }}" readonly />
+                            </div>
+                            <div class="field">
+                                <label for="title">내용</label>
+                                <textarea class="textarea" name="" id="title" cols="30" rows="10"
+                                    readonly>{{ mountain['content'] }}</textarea>
+                            </div>
+                        </div>
+                        <footer class="bulma-card-footer">
+                            <a href="/mountain/update?no={{ mountain['no'] }}" class="card-footer-item">수정</a>
+                            <a href="#" onclick="api_delete({{ mountain['no'] }})" class="card-footer-item">삭제</a>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+</body>
+
+</html>

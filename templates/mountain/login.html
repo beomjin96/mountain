@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,42 +13,60 @@
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
 
     <!-- Import JQuery -->
-    <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+
         * {
             font-family: 'Noto Sans KR', sans-serif;
         }
-        html, body, .section {
-            height: 100%;
-        }
+
         body {
-            background: url("/static/images/background-mountains7.jpg") no-repeat;
+            background: url('https://images.pexels.com/photos/1461027/pexels-photo-1461027.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260') no-repeat center;
             background-size: cover;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            display: flex;
+            height: 100vh;
         }
 
-        nav {
-            margin-bottom: 100px;
+        .section {
+            width: 100%;
+        }
+
+        .column-container {
+            margin: auto;
+        }
+
+        .btn-login:hover,
+        .btn-account:hover {
+            background-color: #DEFFFA;
+            font-weight: bold;
+            color: #00A1BE;
+            border-radius: 3px;
+            transition: ease 0.3s all;
+            opacity: 0.8;
         }
     </style>
 
     <script>
         function verifyPassword() {
             const password = $("#password").val();
-            if (!password) {
+            if (!password) { // 패스워드가 비어있다면
                 $("#password-error-message").removeClass("is-hidden");
                 $("#password").addClass("is-danger");
                 $("#password-exclamation").removeClass("is-hidden");
                 $("#password").focus();
-                return false;
-            } else {
+                return false; // False
+            } else { // 패스워드가 비어있지 않다면
                 $("#password-error-message").addClass("is-hidden");
                 $("#password").removeClass("is-danger");
                 $("#password-exclamation").addClass("is-hidden");
             }
+
             return true;
         }
 
@@ -89,11 +108,11 @@
                 type: "POST",
                 url: "/mountain/login",
                 data: { email_give: $("#email").val(), password_give: $("#password").val() },
-                success: function(response) {
+                success: function (response) {
                     if (response['result'] == 'success') {
                         alert('로그인 성공');
                         $.cookie('myToken', response['token']);
-                        window.location.href='/mountain/list';
+                        window.location.href = '/mountain/list';
                     } else {
                         alert(response['message']);
                         $("#email").focus();
@@ -103,54 +122,66 @@
         }
     </script>
 </head>
+
 <body>
-<section class="section">
-        <div class="container">
-        <div class="columns is-justify-content-center">
-            <div class="column is-two-fifths">
-                <div class="card">
-                    <header class="card-header">
-                        <div class="card-header-title has-background-primary has-background-light has-text-white">로그인
-                        </div>
-                    </header>
-                    <div class="card-content">
-                        <div class="content">
-                            <div class="field">
-                                <p class="control is-expanded has-icons-left has-icons-right">
-                                    <input class="input" id="email" type="email" placeholder="Email">
-                                    <span class="icon is-small is-left">
-                                        <i class="fa fa-envelope"></i>
-                                    </span>
-                                    <span class="icon is-small is-right">
-                                        <i class="fa fa-exclamation-triangle is-hidden" id="email-exclamation"></i>
-                                    </span>
-                                </p>
-                                <p class="help is-danger is-hidden" id="email_error_message_1">이메일을 입력해 주세요.</p>
-                                <p class="help is-danger is-hidden" id="email_error_message_2">이메일 형식에 맞게 입력해 주세요.</p>
+    <h1 class="title">
+        <img src="/static/images/title.png" alt="산넘고 산넘어">
+    </h1>
+    <section class="section">
+        <div class="container is-two-fifths">
+            <div class="columns is-justify-content-center">
+                <div class="column is-two-fifths">
+                    <div class="bulma-card">
+                        <header class="bulma-card-header">
+                            <div
+                                class="bulma-card-header-title has-background-primary has-background-light has-text-white">
+                                로그인
                             </div>
-                            <div class="field">
-                                <p class="control has-icons-left has-icons-right">
-                                    <input class="input" id="password" type="password" placeholder="Password">
-                                    <span class="icon is-small is-left">
-                                        <i class="fa fa-lock"></i>
-                                    </span>
-                                    <span class="icon is-small is-right">
-                                        <i class="fa fa-exclamation-triangle is-hidden" id="password-exclamation"></i>
-                                        {#<i class="fa fa-check"></i>#}
-                                    </span>
-                                </p>
-                                <p class="help is-danger is-hidden" id="password-error-message">비밀번호를 입력해 주세요.</p>
+                        </header>
+                        <div class="bulma-card-content">
+                            <div class="content">
+                                <label for="email" class="label">이메일</label>
+                                <div class="field">
+                                    <p class="control is-expanded has-icons-left has-icons-right">
+                                        <input class="input" id="email" type="email" placeholder="Email">
+                                        <span class="icon is-small is-left">
+                                            <i class="fa fa-envelope"></i>
+                                        </span>
+                                        <span class="icon is-small is-right">
+                                            <i class="fa fa-exclamation-triangle is-hidden" id="email-exclamation"></i>
+                                        </span>
+                                    </p>
+                                    <p class="help is-danger is-hidden" id="email_error_message_1">이메일을 입력해 주세요.</p>
+                                    <p class="help is-danger is-hidden" id="email_error_message_2">이메일 형식에 맞게 입력해 주세요.
+                                    </p>
+                                </div>
+                                <label for="password" class="label">비밀번호</label>
+                                <div class="field">
+                                    <p class="control has-icons-left has-icons-right">
+                                        <input class="input" id="password" type="password" placeholder="Password">
+                                        <span class="icon is-small is-left">
+                                            <i class="fa fa-lock"></i>
+                                        </span>
+                                        <span class="icon is-small is-right">
+                                            <i class="fa fa-exclamation-triangle is-hidden"
+                                                id="password-exclamation"></i>
+                                        </span>
+                                    </p>
+                                    <p class="help is-danger is-hidden" id="password-error-message">비밀번호를 입력해 주세요.</p>
+                                </div>
                             </div>
                         </div>
+                        <footer class="bulma-card-footer">
+                            <a href="#" onclick="login()"
+                                class="card-footer-item has-text-primary-dark btn-login">로그인</a>
+                            <a href="/mountain/account"
+                                class="card-footer-item has-text-primary-dark btn-account">회원가입</a>
+                        </footer>
                     </div>
-                    <footer class="card-footer">
-                        <a href="#" onclick="login()" class="card-footer-item has-text-primary-dark">로그인</a>
-                        <a href="#" class="card-footer-item has-text-primary-dark">회원가입</a>
-                    </footer>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 </body>
+
 </html>

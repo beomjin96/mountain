@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Main</title>
+    <!-- Import Bulma CSS CDN -->
+    <link rel="stylesheet" href="/static/css/bulma.css" />
+
+    <!-- Import Font-Awesome CDN -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+    <!-- Import Slick CDN -->
+    <link rel="stylesheet" type="text/css" href="/static/css/slick/slick.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/slick/slick-theme.css" />
+
+    <!-- Import JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+
+        * {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        section {
+            background: url("/static/images/background-mountains.png") no-repeat;
+            background-size: cover;
+        }
+
+        .image img {
+            height: 230px;
+        }
+
+        .card {
+            width: 30%;
+        }
+
+        #banner {
+            height: 200px;
+        }
+    </style>
+</head>
+
+
+<body>
+    <script>
+        function logout() {
+            $.removeCookie('myToken');
+            window.location.href = '/';
+        }
+    </script>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="#">
+                <img src="/static/images/home-logo.png">
+            </a>
+
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
+                data-target="navbarBasicExample">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+
+        <div id="navbarBasicExample" class="navbar-menu">
+            <div class="navbar-start">
+                <a href="/mountain/list" class="navbar-item">Home</a>
+            </div>
+
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a href="/mountain/add" class="button is-primary">
+                            <strong>글쓰기</strong>
+                        </a>
+                        <a href="/mountain/login" class="button is-light" onclick="logout()">로그아웃</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <section class="section">
+        <div class="container">
+            <div class="box mb-5 has-background-danger-light is-align-items-center is-flex is-justify-content-center"
+                id="banner">
+                <img src="/static/images/title-small.png" alt="">
+            </div>
+        </div>
+        <div class="container">
+            <div class="is-flex box is-justify-content-space-around is-flex-wrap-wrap">
+                {% for mountain in mountain_list %}
+                <div class="card mt-2 mb-5">
+                    <header class="card-header">
+                        <div class="card-header-title has-background-primary has-background-light has-text-white">{{
+                            mountain['title'] }}
+                            <span class="mr-2 mt-2">{{ mountain['reg_datex'] }}</span>
+                            <span class="mr-2 mt-2">{{ mountain['nickname'] }}</span>
+                        </div>
+                    </header>
+                    <div class="card-image">
+                        <figure class="image">
+                            <img src="/static/images/mountain/{{ mountain['image'] }}" alt="사진을 찾을 수 없음"
+                                style="height: 230px">
+                        </figure>
+                    </div>
+                    <div class="card-content">
+                        <div class="content">
+                            <span class="has-text-weight-bold">{{ mountain['name'] }}</span>
+                            <div class="is-flex is-flex-direction-row-reverse">
+                                <span class="has-text-weight-bold">{{ mountain['star'] }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="card-footer">
+                        <a href="/mountain/detail?no_give={{ mountain['no'] }}"
+                            class="card-footer-item has-text-primary-dark">상세보기</a>
+                    </footer>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
