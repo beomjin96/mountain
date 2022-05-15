@@ -12,12 +12,13 @@
 -   HTML
 -   CSS (Bulma)
 -   JavaScript
--   jinja2
+-   Jinja2
 
 ### Backend
 
--  python
--  Flask, MongoDB Atlas
+-  Python
+-  Flask
+-  MongoDB Atlas
 
 ### 배포
 
