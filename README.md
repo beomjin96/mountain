@@ -43,9 +43,9 @@
       ><br />
     </td>
     <td align="center">
-      <a href="https://github.com/coldrain-f"
+      <a href="https://github.com/redcarrot-h"
         ><img
-          src="https://avatars.githubusercontent.com/u/81298415?v=4"
+          src="https://avatars.githubusercontent.com/u/101488338?v=4"
           width="100px;"
           alt=""
         /><br /><sub><b>황윤정</b></sub></a
