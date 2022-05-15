@@ -12,10 +12,12 @@
 -   HTML
 -   CSS (Bulma)
 -   JavaScript
+-   jinja2
 
 ### Backend
 
--   Flask, MongoDB Atlas
+-  python
+-  Flask, MongoDB Atlas
 
 ### 배포
 
@@ -78,7 +80,7 @@
 | **인상운** | 로그인, 로그아웃, 게시물 수정, 게시물 삭제                           |
 | **김채운** | 회원가입                           |
 | **김범진** | 메인페이지, 상세보기     |
-| **황윤정** | 게시물 업로드|
+| **황윤정** | 게시물 등록, 파일 업로드|
 
 # 상세 기능
 
