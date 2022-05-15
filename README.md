@@ -34,9 +34,9 @@
 <table>
   <tr>
     <td align="center">
-      <a href="https://github.com/shippig"
+      <a href="https://github.com/coldrain-f"
         ><img
-          src="https://avatars.githubusercontent.com/u/42665042?v=4"
+          src="https://avatars.githubusercontent.com/u/81298415?v=4"
           width="100px;"
           alt=""
         /><br /><sub><b>인상운</b></sub></a
